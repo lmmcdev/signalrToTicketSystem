@@ -1,3 +1,5 @@
+import { app } from '@azure/functions';
+
 app.http('createTicket', {
   methods: ['POST'],
   authLevel: 'function',
