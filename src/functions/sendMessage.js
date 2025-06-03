@@ -1,22 +1,26 @@
-const { app, output } = require('@azure/functions');
-
-const signalROutput = output.generic({
-  type: 'signalR',
-  name: 'signalR',
-  hubName: 'default',
-  connectionStringSetting: 'AzureSignalRConnectionString',
-});
-
-app.post('sendMessage', {
-  authLevel: 'anonymous',
+app.http('createTicket', {
+  methods: ['POST'],
+  authLevel: 'function',
   handler: async (request, context) => {
-    const message = await request.json();
-    context.extraOutputs.set(signalROutput, {
-      target: 'newMessage',
-      arguments: [message],
-    });
-    return { status: 200, body: 'Message sent.' };
+    const ticket = await request.json();
+
+    // lógica para guardar el ticket...
+
+    context.extraOutputs.signalROutput = [{
+      target: 'ticketCreated',
+      arguments: [ticket],
+    }];
+
+    return {
+      status: 201,
+      body: ticket,
+    };
   },
-  route: 'sendMessage',
-  extraOutputs: [signalROutput],
+  extraOutputs: [
+    {
+      type: 'signalR',
+      name: 'signalROutput',
+      hubName: 'ticketsHub',
+    },
+  ],
 });
