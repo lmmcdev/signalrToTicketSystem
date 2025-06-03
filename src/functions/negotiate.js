@@ -1,21 +1,24 @@
-const { app, input } = require('@azure/functions');
+const { app } = require('@azure/functions');
+const { AzureFunction, app: funcApp } = require('@azure/functions');
+const { SignalRConnectionInfoInput } = require('@azure/functions');
 
-const inputSignalR = input.generic({
-  type: 'signalRConnectionInfo',
-  name: 'connectionInfo',
-  hubName: 'default',
-  connectionStringSetting: 'AzureSignalRConnectionString',
-});
-
-app.post('negotiate', {
+app.http('negotiate', {
+  methods: ['GET'],
   authLevel: 'anonymous',
-  handler: (request, context) => {
-    return { body: JSON.stringify(context.extraInputs.get(inputSignalR)) }
+  handler: async (request, context) => {
+    const connectionInfo = await context.bindings.signalRConnectionInfo;
+    return {
+      body: connectionInfo,
+    };
   },
-  route: 'negotiate',
-  extraInputs: [inputSignalR],
+  extraInputs: [
+    {
+      type: 'signalRConnectionInfo',
+      name: 'signalRConnectionInfo',
+      hubName: 'ticketsHub',
+    },
+  ],
 });
-
 
 /*const { app } = require('@azure/functions');
 
