@@ -5,7 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"]
+      "methods": ["post"],
+      "route": "sendTicketMessage"
     },
     {
       "type": "http",
@@ -14,9 +15,9 @@
     },
     {
       "type": "signalR",
+      "direction": "out",
       "name": "signalRMessages",
-      "hubName": "ticketsHub",
-      "direction": "out"
+      "hubName": "ticketsHub"
     }
   ]
 }
