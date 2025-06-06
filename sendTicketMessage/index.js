@@ -1,13 +1,26 @@
 module.exports = async function (context, req) {
   const ticket = req.body;
 
-  context.bindings.signalRMessages = [{
-    target: 'ticketCreated',
-    arguments: [ticket]
-  }];
+  if (!ticket) {
+    context.log('❌ No ticket payload received');
+    context.res = {
+      status: 400,
+      body: 'Missing ticket data in request body',
+    };
+    return;
+  }
+
+  context.log(`📣 Enviando ticket a SignalR: ${ticket.id || 'sin ID'}`);
+
+  context.bindings.signalRMessages = [
+    {
+      target: 'ticketCreated',
+      arguments: [ticket],
+    },
+  ];
 
   context.res = {
     status: 200,
-    body: { message: 'SignalR message sent.' }
+    body: 'SignalR message sent successfully',
   };
 };
