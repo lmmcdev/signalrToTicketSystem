@@ -14,8 +14,8 @@ module.exports = async function (context, req) {
 
   context.bindings.signalRMessages = [
     {
-      target: 'ticketUpdated',
-      arguments: [ticket],
+      target: 'statsUpdated',
+      arguments: [],
     },
   ];
 
