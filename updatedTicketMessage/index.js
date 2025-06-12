@@ -17,6 +17,10 @@ module.exports = async function (context, req) {
       target: 'ticketUpdated',
       arguments: [ticket],
     },
+    {
+      target: 'statsUpdated',
+      arguments: [],
+    },
   ];
 
   context.res = {
