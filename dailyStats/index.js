@@ -2,20 +2,20 @@ module.exports = async function (context, req) {
   const data = req.body;
 
   if (!data) {
-    context.log('❌ No ticket payload received');
+    context.log('❌ No payload received');
     context.res = {
       status: 400,
-      body: 'Missing ticket data in request body',
+      body: 'Missing data in request body',
     };
     return;
   }
 
-  context.log(`📣 Updating ticket a SignalR: ${data}`);
+  context.log(`📣 Updating data SignalR: ${data}`);
 
   context.bindings.signalRMessages = [
     {
       target: 'dailyStats',
-      arguments: [],
+      arguments: [data],
     },
   ];
 
