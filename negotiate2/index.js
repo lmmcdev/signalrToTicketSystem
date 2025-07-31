@@ -1,4 +1,16 @@
 module.exports = async function (context, req) {
+  
+  const userId = req.query.userId || (req.body && req.body.userId);
+  if (!userId) {
+    context.log('❌ Missing userId in negotiation request');
+    return {
+      status: 400,
+      body: 'userId is required for negotiation'
+    };
+  }
+
+  context.log(`🔐 Negotiating SignalR connection for userId: ${userId}`);
+
   const connectionInfo = context.bindings.signalRConnectionInfo;
   try {
 
