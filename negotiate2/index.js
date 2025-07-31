@@ -12,6 +12,8 @@ module.exports = async function (context, req) {
   context.log(`🔐 Negotiating SignalR connection for userId: ${userId}`);
 
   const connectionInfo = context.bindings.signalRConnectionInfo;
+  connectionInfo.userId = userId;
+  
   try {
 
     context.log('✅ Negotiation success');
