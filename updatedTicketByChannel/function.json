@@ -17,7 +17,7 @@
       "type": "signalR",
       "direction": "out",
       "name": "signalRMessages",
-      "hubName": "ticketsHubChannels"
+      "hubName": "ticketsHub"
     }
   ]
 }

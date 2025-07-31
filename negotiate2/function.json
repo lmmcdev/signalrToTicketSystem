@@ -5,7 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get"]
+      "methods": ["post"],
+      "route": "negotiate"
     },
     {
       "type": "http",
@@ -15,8 +16,9 @@
     {
       "type": "signalRConnectionInfo",
       "name": "signalRConnectionInfo",
-      "hubName": "ticketsHubChannels",
-      "direction": "in"
+      "hubName": "ticketshubchannels",
+      "connection": "AzureSignalRConnectionString",
+      "userId": "{body.userId}"
     }
   ]
 }
