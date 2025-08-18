@@ -6,7 +6,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "negotiate"
+      "route": "signalr/send"
     },
     {
       "type": "http",
@@ -14,11 +14,11 @@
       "name": "$return"
     },
     {
-      "type": "signalRConnectionInfo",
-      "name": "signalRConnectionInfo",
+      "type": "signalR",
+      "direction": "out",
+      "name": "signalRMessages",
       "hubName": "ticketshubchannels",
-      "connectionStringSetting": "AzureSignalRConnectionString",
-      "userId": "{userId}"
+      "connectionStringSetting": "AzureSignalRConnectionString"
     }
   ]
 }
