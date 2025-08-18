@@ -1,25 +1,48 @@
 // v3 - CommonJS
 module.exports = async function (context, req) {
-  const body = req.body || {};
-  const groupName = body.groupName;
-  const target = body.target || 'notify';   // nombre del método en el cliente
-  const payload = body.payload ?? {};       // lo que quieras enviar
+  try {
+    const body = req.body || {};
 
-  if (!groupName) {
-    return { status: 400, body: 'groupName is required' };
-  }
+    // Puede venir groupName (string) o groupNames (array)
+    const singleGroup = typeof body.groupName === 'string' && body.groupName.trim();
+    const manyGroups = Array.isArray(body.groupNames) ? body.groupNames.filter(Boolean) : [];
 
-  // Mensaje a un grupo: el cliente debe tener connection.on(target, handler)
-  context.bindings.signalRMessages = [
-    {
-      groupName,
-      target,
-      arguments: [payload]  // siempre array
+    const target = (body.target || 'notify').toString();
+    const payload = body.payload ?? {}; // objeto o array, lo enviamos como único argumento
+
+    // Normaliza la lista de grupos destino
+    const groups = singleGroup ? [singleGroup] : manyGroups;
+
+    if (!groups.length) {
+      return (context.res = { status: 400, body: 'groupName or groupNames is required' });
     }
-  ];
 
-  return {
-    status: 200,
-    body: { ok: true, groupName, target }
-  };
+    // Construye mensajes: uno por grupo
+    context.bindings.signalRMessages = groups.map((g) => ({
+      groupName: g,
+      target,
+      arguments: [payload], // SIEMPRE array de argumentos
+    }));
+
+    context.res = {
+      status: 200,
+      body: { ok: true, groups, target }
+    };
+  } catch (err) {
+    context.log('❌ signalr-send-group error:', err);
+    context.res = { status: 500, body: { error: err.message || 'Internal error' } };
+  }
 };
+
+
+/*
+
+curl -X POST "https://<tu-func-app>.azurewebsites.net/api/signalr/send-group?code=<FUNCTION_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "groupNames": ["department:Referrals","department:Switchboard"],
+    "target": "dailyStats",
+    "payload": { "id":"2025-08-18", "date":"2025-08-18" }
+  }'
+
+  */
