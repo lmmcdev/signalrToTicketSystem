@@ -1,25 +1,24 @@
-
 {
   "bindings": [
     {
-      "authLevel": "function",
+      "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "signalr/send-group"
+      "route": "signalr/send"
     },
     {
       "type": "http",
       "direction": "out",
-      "name": "res"
+      "name": "$return"
     },
     {
       "type": "signalR",
+      "direction": "out",
       "name": "signalRMessages",
       "hubName": "ticketshubchannels",
-      "connectionStringSetting": "AzureSignalRConnectionString",
-      "direction": "out"
+      "connectionStringSetting": "AzureSignalRConnectionString"
     }
   ]
 }
